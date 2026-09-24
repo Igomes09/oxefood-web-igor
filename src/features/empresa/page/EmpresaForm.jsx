@@ -1,45 +1,95 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IMaskInput } from 'react-imask';
+import { useParams } from "react-router-dom";
 import { toast } from 'react-toastify';
 import BackButton from "../../../shared/components/BackButton";
 import Breadcrumbs from "../../../shared/components/Breadcrumbs";
 import Footer from "../../../shared/components/Footer";
 import Menu from "../../../shared/components/Menu";
 import SaveButton from "../../../shared/components/SaveButton";
-import { cadastrar } from "../../../shared/services/crudService";
+import { atualizar, buscarPorId, cadastrar } from "../../../shared/services/crudService";
 import { MAPPING_CONTROLLER_EMPRESA } from "../../empresa/service/empresaService";
 
 export default function EmpresaForm() {
 
+    const { idEmpresa } = useParams();
     const [empresa, setEmpresa] = useState({
+        id: null,
         nomeFantasia: "",
         nomeEmpresarial: "",
         cnpj: "",
-        inscricaoEstadual: "",
-        foneCelular: "",
+        fone: "",
         foneAlternativo: "",
-        site: ""
+
     });
+
+    useEffect(() => {
+
+        if (idEmpresa) {
+            carregarEmpresa();
+        }
+
+
+    }, [idEmpresa]);
+
+    async function carregarEmpresa() {
+
+        try {
+
+            const data = await buscarPorId(
+                MAPPING_CONTROLLER_EMPRESA,
+                idEmpresa
+            );
+
+            setEmpresa({
+                id: data.id,
+                nomeFantasia: data.nomeFantasia ?? "",
+                nomeEmpresarial: data.nomeEmpresarial ?? "",
+                cnpj: data.cnpj ?? "",
+                fone: data.fone ?? "",
+                foneAlternativo: data.foneAlternativo ?? ""
+            });
+
+        } catch (erro) {
+            toast.error("Erro ao carregar Empresa.");
+        }
+    }
+
+
 
     async function salvar() {
 
         try {
-            await cadastrar(MAPPING_CONTROLLER_EMPRESA, empresa);
-            toast.success("empresa cadastrada com sucesso!");
+            if (idEmpresa) {
+                await atualizar(MAPPING_CONTROLLER_EMPRESA, empresa);
+                toast.success("Empresa alterada com sucesso!");
+            } else {
+                await cadastrar(MAPPING_CONTROLLER_EMPRESA, empresa);
+                toast.success("Empresa cadastrada com sucesso!");
+            }
         } catch (erro) {
-            toast.error("Erro ao cadastrar empresa.");
+            toast.error("Erro ao salvar Empresa.");
         }
     }
+
 
     return (
 
         <div>
             <Menu />
 
-            <Breadcrumbs items={[
-                { label: "empresa" },
-                { label: "Cadastrar" }
-            ]} />
+            {idEmpresa ?
+                <Breadcrumbs items={[
+                    { label: "Empresa" },
+                    { label: "Alterar" }
+                ]} />
+                :
+                <Breadcrumbs items={[
+                    { label: "Empresa" },
+                    { label: "Cadastrar" }
+                ]} />
+            }
+
             <div style={{ marginTop: '40px', marginLeft: '10%', marginRight: '10%' }}>
 
                 <div className="overflow-x-auto shadow-sm">
@@ -47,7 +97,7 @@ export default function EmpresaForm() {
                     <div className="flex items-center justify-between mb-6" style={{ marginTop: '20px', marginLeft: '10px', marginRight: '10px' }}>
 
                         <h1 className="text-3xl font-bold text-gray-800">
-                            Nova empresa
+                            {idEmpresa ? "Alterar Empresa" : "Nova Empresa"}
                         </h1>
 
                     </div>
@@ -74,7 +124,7 @@ export default function EmpresaForm() {
                                     </fieldset>
                                 </div>
 
-                                    <div className="card rounded-box grid grow p-8" style={{ padding: '30px' }}>
+                                <div className="card rounded-box grid grow p-8" style={{ padding: '30px' }}>
 
                                     <fieldset className="fieldset w-full">
                                         <label className="fieldset-legend" htmlFor="nome">Nome Empresarial (Razão Social)</label>
@@ -139,43 +189,6 @@ export default function EmpresaForm() {
                                             id="foneAlternativo"
                                         />
                                     </fieldset>
-
-                                </div>
-                                <div className="card rounded-box grid grow p-8" style={{ padding: '30px' }}>
-
-                                    <fieldset className="fieldset w-full">
-                                        <legend className="fieldset-legend" htmlFor="site">Site</legend>
-                                        <input
-                                            type="text"
-                                            id="site"
-                                            className="input input-bordered w-full"
-                                            value={empresa.site}
-                                            onChange={(e) =>
-                                                setEmpresa({ ...empresa, site: e.target.value })
-                                            }
-                                        />
-                                    </fieldset>
-
-                                    
-
-                                </div>
-                                <div className="card rounded-box grid grow p-8" style={{ padding: '30px' }}>
-
-                                    <fieldset className="fieldset w-full">
-                                        <legend className="fieldset-legend" htmlFor="inscricaoEstadual">Inscricão Estadual</legend>
-                                        <input
-                                            type="text"
-                                            id="inscricaoEstadual"
-                                            className="input input-bordered w-full"
-                                            value={empresa.inscricaoEstadual}
-                                            onChange={(e) =>
-                                                setEmpresa({ ...empresa, inscricaoEstadual: e.target.value })
-                                            }
-                                        />
-                                    </fieldset>
-
-                                    
-
                                 </div>
                             </div>
                             <div className="flex w-full" >

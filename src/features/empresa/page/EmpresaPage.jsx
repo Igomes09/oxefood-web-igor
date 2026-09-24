@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Breadcrumbs from "../../../shared/components/Breadcrumbs";
 import CrudActions from "../../../shared/components/CrudActions";
 import Footer from "../../../shared/components/Footer";
@@ -10,7 +11,9 @@ import { MAPPING_CONTROLLER_EMPRESA } from "../service/empresaService";
 
 export default function EmpresaPage() {
 
+    
     const [lista, setLista] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         carregar();
@@ -22,9 +25,11 @@ export default function EmpresaPage() {
         setLista(data);
     }
 
-    function editar(id) { 
-        navigate 
+    function editar(id) {
+
+        navigate(`/empresa-form/${id}`);
     }
+
 
     async function confirmarRemover(id) {
         if (confirm("Deseja realmente excluir esta empresa?")) {
@@ -46,7 +51,7 @@ export default function EmpresaPage() {
                         <h1 className="text-3xl font-bold text-gray-800">
                             Empresas
                         </h1>
-                        <NewButton destino="/produto-form" />
+                        <NewButton destino="/empresa-form" />
                     </div>
                     <div className="divider divider-info" />
                     <div className="overflow-x-auto" style={{ marginTop: '30px' }}>
