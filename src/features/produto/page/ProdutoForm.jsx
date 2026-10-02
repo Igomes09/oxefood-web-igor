@@ -13,6 +13,7 @@ import { MAPPING_CONTROLLER_PRODUTO } from "../../produto/service/produtoService
 export default function ProdutoForm() {
 
     const { idProduto } = useParams();
+
     const [produto, setProduto] = useState({
         id: null,
         codigo: "",
@@ -62,10 +63,10 @@ export default function ProdutoForm() {
 
         try {
             if (idProduto) {
-                await atualizar(MAPPING_CONTROLLER_PRODUTO, Produto);
+                await atualizar(MAPPING_CONTROLLER_PRODUTO, produto);
                 toast.success("Produto alterado com sucesso!");
             } else {
-                await cadastrar(MAPPING_CONTROLLER_PRODUTO, Produto);
+                await cadastrar(MAPPING_CONTROLLER_PRODUTO, produto);
                 toast.success("Produto cadastrado com sucesso!");
             }
         } catch (erro) {
@@ -149,7 +150,7 @@ export default function ProdutoForm() {
                                     <fieldset className="fieldset w-full">
                                         <label className="fieldset-legend" htmlFor="foneCelular">Valor Unitário (R$)</label>
                                         <IMaskInput
-                                            mask="0,00"
+                                            mask="0.00"
                                             value={produto.valorUnitario}
                                             onAccept={(value) =>
                                                 setProduto({ ...produto, valorUnitario: value })
@@ -165,12 +166,29 @@ export default function ProdutoForm() {
                                     <fieldset className="fieldset w-full">
                                         <legend className="fieldset-legend" htmlFor="descricao">Descrição</legend>
                                         <input
-                                            type="date"
+                                            type="text"
                                             id="descricao"
                                             className="input input-bordered w-full"
                                             value={produto.descricao}
                                             onChange={(e) =>
                                                 setProduto({ ...produto, descricao: e.target.value })
+                                            }
+                                        />
+                                    </fieldset>
+
+                                </div>
+
+                                <div className="card rounded-box grid grow p-8" style={{ padding: '30px' }}>
+
+                                    <fieldset className="fieldset w-full">
+                                        <legend className="fieldset-legend" htmlFor="descricao">Tempo Máximo de Entrega</legend>
+                                        <input
+                                            type="text"
+                                            id="tempoEntregaMaximo"
+                                            className="input input-bordered w-full"
+                                            value={produto.tempoEntregaMaximo}
+                                            onChange={(e) =>
+                                                setProduto({ ...produto, tempoEntregaMaximo: e.target.value })
                                             }
                                         />
                                     </fieldset>

@@ -12,9 +12,9 @@ export async function buscarPorId(mappingController, id) {
     return response.data;
 }
 
-export async function cadastrar(mappingCnotroller, obj) {
+export async function cadastrar(mappingController, obj) {
 
-    const response = await api.post(mappingCnotroller, obj);
+    const response = await api.post(mappingController, obj);
     return response.data;
 }
 

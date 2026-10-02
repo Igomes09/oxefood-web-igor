@@ -64,6 +64,9 @@ export default function EmpresaForm() {
                 await atualizar(MAPPING_CONTROLLER_EMPRESA, empresa);
                 toast.success("Empresa alterada com sucesso!");
             } else {
+
+                console.log(empresa)
+                
                 await cadastrar(MAPPING_CONTROLLER_EMPRESA, empresa);
                 toast.success("Empresa cadastrada com sucesso!");
             }
