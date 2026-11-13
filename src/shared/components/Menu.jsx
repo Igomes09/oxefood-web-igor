@@ -1,3 +1,6 @@
+import { logout } from '../../features/authentication/service/authenticationService';
+
+
 export default function Menu() {
 
     return (
@@ -15,6 +18,16 @@ export default function Menu() {
                         Home
                     </a>
                 </button>
+
+                <button className="btn btn-ghost">
+                   <a
+                       href="/"
+                       onClick={logout}
+                   >
+                       Logout
+                   </a>
+               </button>
+
 
                 <button className="btn btn-ghost" popoverTarget="menu-clientes"> <strong> Cliente </strong> </button>
                 <div id="menu-clientes" popover="auto">
